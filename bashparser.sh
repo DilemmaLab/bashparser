@@ -8,8 +8,8 @@ while read line
 	content=$(wget http://torg.mail.ru/search/?q=\""$search_string"\" -q -O - | iconv -f 'cp1251' -t 'utf8') 
 	# Получили содержимое web-страницы и сохранили его в переменную
 	mobile="$(echo "$content" | grep -n -e '<a href=\"http://torg.mail.ru/mobilephones/\" class=\"preview-card-line__breadcrumbs-item-link js-ustat_link js-ustat_link_catalog\">Сотовые телефоны</a></li>' -e '<a href=\"http://torg.mail.ru/planshety/\" class=\"preview-card-line__breadcrumbs-item-link js-ustat_link js-ustat_link_catalog\">Планшеты</a>' | head -1 | awk -F ':' '{print $1}')" 
-# Проверили по заголовку раздела каталога, действительно ли это телефон или планшет, а не аксесуар; 
-# взяли первую строку (как предположительно наиболее релевантную) 
+# Проверили по заголовку раздела каталога, действительно ли это телефон или планшет, а не аксессуар; 
+# взяли первую строку (как, предположительно, наиболее релевантную) 
 # и положили в переменную номер этой строки
 	if [ ! -z "$mobile" ] # Если строка не пуста, т.е. телефон или планшет действительно найден
 		then model="$(echo "$content" | sed -n "$mobile"',$p' | grep '<div class=\"preview-card-line__title-text\">' | head -1 | sed s/'<b class=\"match_found\">'/''/g | sed s/'<\/b>'/''/g | sed s/'<div class=\"preview-card-line__title-text\">'/''/g | sed s/'<\/div>'/''/g )" 
